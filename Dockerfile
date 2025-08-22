@@ -1,18 +1,7 @@
-# Frontend build stage
-FROM node:18-alpine AS frontend-build
+# Updated test Dockerfile
+FROM node:18
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
 COPY . .
-RUN npm run build
-
-# Runtime stage
-FROM python:3.11-slim AS runtime
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-COPY --from=frontend-build /app/dist ./static
+RUN npm install
 EXPOSE 3000
-EXPOSE 8000
-CMD ["python", "main.py"]
+CMD ["npm", "start"]
